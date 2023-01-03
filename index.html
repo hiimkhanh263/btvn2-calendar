@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <title>Calendar</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="heading">
+        <p class="heading-date"></p>
+        <button><i class="bx bx-chevron-down"></i></button>
+      </div>
+
+      <div class="screen-day">
+        <div class="header">
+          <p class="header-date"></p>
+          <div class="header-btn">
+            <div id="prev" class="header-btn-click">
+              <i class="bx bxs-up-arrow"></i>
+            </div>
+            <div id="next" class="header-btn-click">
+              <i class="bx bxs-down-arrow"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="calendar">
+          <ul class="calendar-weeks">
+            <li>Su</li>
+            <li>Mo</li>
+            <li>Tu</li>
+            <li>We</li>
+            <li>Th</li>
+            <li>Fr</li>
+            <li>Sa</li>
+          </ul>
+          <ul id="calendar-table" class="calendar-days">
+            <li></li>
+          </ul>
+        </div>
+
+        <footer class="footer">
+          <div class="footer-left">
+            <button><i class="bx bx-minus"></i></button>
+            <p>30 mins</p>
+            <button><i class="bx bx-plus"></i></button>
+          </div>
+
+          <button class="footer-right-btn">
+            <i class="bx bxs-right-arrow"></i>
+            Focus
+          </button>
+        </footer>
+      </div>
+
+      <div class="screen-month">
+        <div class="month-header">
+          <p class="month-header-date"></p>
+          <div class="month-header-btn">
+            <div id="month-prev" class="month-header-btn-click">
+              <i class="bx bxs-up-arrow"></i>
+            </div>
+            <div id="month-next" class="month-header-btn-click">
+              <i class="bx bxs-down-arrow"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="month-calendar">
+          <ul id="calendar-table" class="month-calendar-list"></ul>
+        </div>
+      </div>
+
+      <div class="screen-year">
+        <div class="year-header">
+          <p class="year-header-date"></p>
+          <div class="year-header-btn">
+            <div id="year-prev" class="year-header-btn-click">
+              <i class="bx bxs-up-arrow"></i>
+            </div>
+            <div id="year-next" class="year-header-btn-click">
+              <i class="bx bxs-down-arrow"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="year-calendar">
+          <ul id="calendar-table" class="year-calendar-list"></ul>
+        </div>
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>

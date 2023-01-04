@@ -1,21 +1,13 @@
-const screenDay = document.querySelector(".screen-day");
-const screenMonth = document.querySelector(".screen-month");
-const screenYear = document.querySelector(".screen-year");
+const table = document.querySelector("#table-calendar");
+const calendarWeek = document.querySelector(".calendar-weeks");
+const btnPrev = document.querySelector(".btn-prev");
+const btnNext = document.querySelector(".btn-next");
+const footer = document.querySelector(".footer");
+const listCalendarContent = document.querySelectorAll("#table-calendar li");
 
 const calendarDays = document.querySelector(".calendar-days");
 const currentHeadingDate = document.querySelector(".heading-date");
 const currentHeaderDate = document.querySelector(".header-date");
-const btnPrevNextMonth = document.querySelectorAll(".header-btn-click");
-
-// ----month-----
-const calendarMonths = document.querySelector(".month-calendar-list");
-const currentHeaderMonth = document.querySelector(".month-header-date");
-const btnPrevNextYear = document.querySelectorAll(".month-header-btn-click");
-
-// -----year-----
-const calendarYears = document.querySelector(".year-calendar-list");
-const currentHeaderYear = document.querySelector(".year-header-date");
-const btnPrevNextTenYear = document.querySelectorAll(".year-header-btn-click");
 
 let date = new Date();
 let currentYear = date.getFullYear();
@@ -73,59 +65,43 @@ const calendar = () => {
 
   let screenState = 1;
 
-  currentHeaderDate.addEventListener("click", () => {
-    if (screenState === 1) {
-      screenState++;
-      screenDay.style.display = "none";
-      screenMonth.style.display = "block";
-      screenYear.style.display = "none";
-
-      renderCalendar();
-    } else {
-      return;
-    }
-  });
-
-  // --click header---
-  currentHeaderMonth.addEventListener("click", () => {
-    if (screenState === 2) {
-      screenState++;
-      screenDay.style.display = "none";
-      screenMonth.style.display = "none";
-      screenYear.style.display = "block";
-
-      renderCalendar();
-    } else {
-      return;
-    }
-  });
-
   currentHeadingDate.innerHTML = `${day_name}, ${
     months[date.getMonth()]
   } ${currentDate}`;
 
-  calendarMonths.addEventListener("click", () => {
-    screenDay.style.display = "block";
-    screenMonth.style.display = "none";
-    screenYear.style.display = "none";
-    screenState--;
+  currentHeaderDate.addEventListener("click", () => {
+    if (screenState < 3) {
+      screenState++;
 
-    renderCalendar();
+      renderCalendar();
+    } else {
+      return;
+    }
   });
 
-  calendarYears.addEventListener("click", () => {
-    screenDay.style.display = "none";
-    screenMonth.style.display = "block";
-    screenYear.style.display = "none";
-    screenState--;
-
-    renderCalendar();
+  table.addEventListener("click", function (e) {
+    const calendarNode = e.target.closest(".calendar-content");
+    if (calendarNode) {
+      if (screenState === 3) {
+        currentYear = Number(calendarNode.dataset.year);
+        screenState--;
+      } else if (screenState === 2) {
+        currentMonth = Number(calendarNode.dataset.month);
+        currentYear = Number(calendarNode.dataset.year);
+        screenState--;
+      }
+      renderCalendar();
+    }
   });
 
   const renderCalendar = () => {
     if (screenState === 1) {
       // -----day-----
-      currentHeaderDate.innerHTML = `${months[currentMonth]} ${currentYear}`;
+      currentHeaderDate.innerText = `${months[currentMonth]} ${currentYear}`;
+
+      // calendarWeek.style.display = "grid";
+      // table.classList.remove("grid-cols-4");
+      // table.classList.add("grid-cols-7");
 
       let firstDayofMonth = new Date(currentYear, currentMonth, 1).getDay();
 
@@ -148,9 +124,11 @@ const calendar = () => {
       let days = "";
 
       for (let i = firstDayofMonth; i > 0; i--) {
-        days += `<li class="inactive calendar-content">${
-          lastDateofLastMonth - i + 1
-        }</li>`;
+        days += `<li
+        data-year=${currentYear} 
+                        data-month=${currentMonth - 1} 
+                        data-day=${lastDateofLastMonth - i + 1} 
+        class="inactive calendar-content">${lastDateofLastMonth - i + 1}</li>`;
       }
 
       for (let i = 1; i <= lastDateofMonth; i++) {
@@ -161,19 +139,34 @@ const calendar = () => {
             ? "active"
             : "";
 
-        days += `<li class="${isToday} calendar-content">${i}</li>`;
+        days += `<li
+        data-year=${currentYear} 
+                        data-month=${currentMonth} 
+                        data-day=${i} 
+         class="${isToday} calendar-content">${i}</li>`;
       }
 
       const rangeOfDay = 42 - (firstDayofMonth + lastDateofMonth);
 
       for (let i = 1; i <= rangeOfDay; i++) {
-        days += `<li class="inactive calendar-content">${i}</li>`;
+        days += `<li 
+        data-year=${currentYear} 
+                        data-month=${currentMonth + 1} 
+                        data-day=${i} 
+        class="inactive calendar-content">${i}</li>`;
       }
 
-      calendarDays.innerHTML = days;
+      table.innerHTML = days;
     } else if (screenState === 2) {
       // -----month -----
-      currentHeaderMonth.innerHTML = `${currentYear}`;
+      calendarWeek.style.display = "none";
+      footer.style.display = "none";
+
+      // calendarWeek.style.display = "none";
+      // table.classList.remove("grid-cols-7");
+      // table.classList.add("grid-cols-4");
+
+      currentHeaderDate.innerText = `${currentYear}`;
 
       let month = "";
 
@@ -183,96 +176,90 @@ const calendar = () => {
             ? "active"
             : "";
 
-        month += `<li class="${isMonth} calendar-content">${months[i].slice(
-          0,
-          3
-        )}</li>`;
+        month += `<li data-month=${i} data-year=${currentYear} class="${isMonth} calendar-content grid">${months[
+          i
+        ].slice(0, 3)}</li>`;
       }
 
       for (let i = 0; i <= 3; i++) {
-        month += `<li class="inactive calendar-content">${months[i].slice(
-          0,
-          3
-        )}</li>`;
+        month += `<li data-year=${currentYear + 1} 
+        data-month=${i}  class="inactive calendar-content grid">${months[
+          i
+        ].slice(0, 3)}</li>`;
       }
 
-      calendarMonths.innerHTML = month;
-
-      // ----------------
+      table.innerHTML = month;
     } else if (screenState === 3) {
       // -----year-----
-      currentHeaderYear.innerHTML = `${rangeOfYear[0]} - ${rangeOfYear[1]}`;
+      footer.style.display = "none";
+
+      currentHeaderDate.innerText = `${rangeOfYear[0]} - ${rangeOfYear[1]}`;
       let year = "";
 
       if (Math.floor((rangeOfYear[0] % 100) / 10) % 2 === 0) {
         for (let i = 2; i > 0; i--) {
-          let isYear = currentYear === rangeOfYear[0] - i;
-          year += `<li class="inactive calendar-content">${
+          const isYear = currentYear === rangeOfYear[0] - i;
+          year += `<li data-year=${
             rangeOfYear[0] - i
-          }</li>`;
+          } class="inactive calendar-content grid">${rangeOfYear[0] - i}</li>`;
         }
 
         for (let i = rangeOfYear[0]; i <= rangeOfYear[1]; i++) {
-          let isYear = currentYear == i ? "active" : "";
+          const isYear = currentYear == i ? "active" : "";
 
-          year += `<li class="${isYear} calendar-content">${i}</li>`;
+          year += `<li data-year=${i} class="${isYear} calendar-content grid">${i}</li>`;
         }
 
         for (let i = 1; i <= 4; i++) {
-          year += `<li class="inactive calendar-content">${
+          year += `<li data-year=${
             rangeOfYear[1] + i
-          }</li>`;
+          } class="inactive calendar-content grid">${rangeOfYear[1] + i}</li>`;
         }
       } else {
         for (let i = rangeOfYear[0]; i <= rangeOfYear[1]; i++) {
-          let isYear = currentYear == i;
+          const isYear = currentYear == i;
 
-          year += `<li class="${isYear} calendar-content">${i}</li>`;
+          year += `<li data-year=${i} class="${isYear} calendar-content grid">${i}</li>`;
         }
         for (let i = 1; i <= 6; i++) {
-          year += `<li class="inactive calendar-content">${
+          year += `<li data-year=${
             rangeOfYear[1] + i
-          }</li>`;
+          } class="inactive calendar-content grid">${rangeOfYear[1] + i}</li>`;
         }
       }
-      calendarYears.innerHTML = year;
+      table.innerHTML = year;
     }
   };
   renderCalendar();
 
-  btnPrevNextMonth.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      currentMonth = btn.id === "prev" ? currentMonth - 1 : currentMonth + 1;
-
-      if (currentMonth < 0 || currentMonth > 11) {
-        date = new Date(currentYear, currentMonth);
-        currentYear = date.getFullYear();
-        currentMonth = date.getMonth();
-      } else {
-        date = new Date();
+  btnPrev.addEventListener("click", () => {
+    if (screenState === 1) {
+      currentMonth -= 1;
+      if (currentMonth === -1) {
+        currentYear -= 1;
+        currentMonth = 11;
       }
-      renderCalendar();
-    });
+    } else if (screenState === 2) {
+      currentYear -= 1;
+    } else if (screenState === 3) {
+      rangeOfYear = [rangeOfYear[0] - 10, rangeOfYear[1] - 10];
+    }
+    renderCalendar();
   });
 
-  btnPrevNextYear.forEach((btnMonth) => {
-    btnMonth.addEventListener("click", () => {
-      currentYear =
-        btnMonth.id === "month-prev" ? currentYear - 1 : currentYear + 1;
-
-      renderCalendar();
-    });
-  });
-
-  btnPrevNextTenYear.forEach((btnTenMonth) => {
-    btnTenMonth.addEventListener("click", () => {
-      rangeOfYear =
-        btnTenMonth.id === "year-prev"
-          ? [rangeOfYear[0] - 10, rangeOfYear[1] - 10]
-          : [rangeOfYear[0] + 10, rangeOfYear[1] + 10];
-
-      renderCalendar();
-    });
+  btnNext.addEventListener("click", () => {
+    if (screenState === 1) {
+      currentMonth += 1;
+      if (currentMonth === 12) {
+        currentYear += 1;
+        currentMonth = 0;
+      }
+    } else if (screenState === 2) {
+      currentYear += 1;
+    } else if (screenState === 3) {
+      rangeOfYear = [rangeOfYear[0] + 10, rangeOfYear[1] + 10];
+    }
+    renderCalendar();
   });
 };
 calendar();

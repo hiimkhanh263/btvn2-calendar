@@ -1,4 +1,3 @@
-const table = document.querySelector("#calendar-table");
 const screenDay = document.querySelector(".screen-day");
 const screenMonth = document.querySelector(".screen-month");
 const screenYear = document.querySelector(".screen-year");
@@ -104,6 +103,24 @@ const calendar = () => {
   currentHeadingDate.innerHTML = `${day_name}, ${
     months[date.getMonth()]
   } ${currentDate}`;
+
+  calendarMonths.addEventListener("click", () => {
+    screenDay.style.display = "block";
+    screenMonth.style.display = "none";
+    screenYear.style.display = "none";
+    screenState--;
+
+    renderCalendar();
+  });
+
+  calendarYears.addEventListener("click", () => {
+    screenDay.style.display = "none";
+    screenMonth.style.display = "block";
+    screenYear.style.display = "none";
+    screenState--;
+
+    renderCalendar();
+  });
 
   const renderCalendar = () => {
     if (screenState === 1) {
